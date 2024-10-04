@@ -13,6 +13,7 @@ const redisClient = redis.createClient({
 
 async function getRedisPosts(limit = 10, offset = 0) {
   try {
+    await redisClient.connect();
     let results = [];
     const max = limit + offset - 1;
     const posts = await redisClient.zRange("posts", offset, max, {
