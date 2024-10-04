@@ -1,8 +1,8 @@
 import express from "express";
 import compression from "compression";
 import redis from "redis";
-import expressCache from "cache-express";
-import cache from "express-cache-headers";
+// import expressCache from "cache-express";
+// import cache from "express-cache-headers";
 const app = express();
 
 const PORT = process.env.PORT || 4000;
@@ -62,34 +62,20 @@ async function getRedisPosts(limit = 10, offset = 0) {
 
 app.use(compression(), express.json({ limit: "50mb" }));
 
-app.use(
-  "/redis",
-  cache({ ttl: 60000, private: true }),
-  expressCache({
-    timeOut: 60000, // Customize cache timeout (in milliseconds)
-    // dependsOn: () => [someDependency], // Specify cache dependencies, should be a function
-    // onTimeout: (key, value) => {
-    //   console.log(`Cache removed for key: ${key}`);
-    // },
-  }),
-  async function (req, res) {
-    const { limit, offset } = req.query;
+app.use("/redis", async function (req, res) {
+  const { limit, offset } = req.query;
 
-    const data = await Promise.all([
-      getRedisPosts(
-        parseInt(limit) || undefined,
-        parseInt(offset) || undefined
-      ),
-      redisClient.zCount("posts", "-inf", "+inf"),
-    ]);
+  const data = await Promise.all([
+    getRedisPosts(parseInt(limit) || undefined, parseInt(offset) || undefined),
+    redisClient.zCount("posts", "-inf", "+inf"),
+  ]);
 
-    res.send({
-      count: data[0].length,
-      total: data[1],
-      posts: data[0],
-    });
-  }
-);
+  res.send({
+    count: data[0].length,
+    total: data[1],
+    posts: data[0],
+  });
+});
 
 app.listen(PORT, () => {
   console.log(`live on ${PORT}`);
