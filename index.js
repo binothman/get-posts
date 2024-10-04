@@ -1,7 +1,7 @@
 import express from "express";
 import compression from "compression";
 import redis from "redis";
-// import expressCache from "cache-express";
+import expressCache from "cache-express";
 // import cache from "express-cache-headers";
 const app = express();
 
@@ -62,7 +62,7 @@ async function getRedisPosts(limit = 10, offset = 0) {
 
 app.use(compression(), express.json({ limit: "50mb" }));
 
-app.use("/redis", async function (req, res) {
+app.use("/redis", expressCache({ timeOut: 60000 }), async function (req, res) {
   const { limit, offset } = req.query;
 
   const data = await Promise.all([
