@@ -2,6 +2,7 @@ import express from "express";
 import compression from "compression";
 import redis from "redis";
 import { getRedisPosts } from "./redis.js";
+import expressCache from "cache-express";
 
 const app = express();
 
@@ -22,20 +23,33 @@ export const redisClient = redis.createClient({
 
 app.use(compression(), express.json({ limit: "50mb" }));
 
-app.use("/redis", async function (req, res) {
-  const { limit, offset } = req.query;
+app.use(
+  "/redis",
+  expressCache({
+    timeOut: 60000, // Customize cache timeout (in milliseconds)
+    // dependsOn: () => [someDependency], // Specify cache dependencies, should be a function
+    // onTimeout: (key, value) => {
+    //   console.log(`Cache removed for key: ${key}`);
+    // },
+  }),
+  async function (req, res) {
+    const { limit, offset } = req.query;
 
-  const data = await Promise.all([
-    getRedisPosts(parseInt(limit) || undefined, parseInt(offset) || undefined),
-    redisClient.zCount("posts", "-inf", "+inf"),
-  ]);
+    const data = await Promise.all([
+      getRedisPosts(
+        parseInt(limit) || undefined,
+        parseInt(offset) || undefined
+      ),
+      redisClient.zCount("posts", "-inf", "+inf"),
+    ]);
 
-  res.send({
-    count: data[0].length,
-    total: data[1],
-    posts: data[0],
-  });
-});
+    res.send({
+      count: data[0].length,
+      total: data[1],
+      posts: data[0],
+    });
+  }
+);
 
 app.listen(PORT, () => {
   console.log(`live on ${PORT}`);

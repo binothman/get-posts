@@ -77,6 +77,11 @@ bytes@3.1.2:
   resolved "https://registry.yarnpkg.com/bytes/-/bytes-3.1.2.tgz#8b0beeb98605adf1b128fa4386403c009e0221a5"
   integrity sha512-/Nf7TyzTx6S3yRJObOAV7956r8cr2+Oj8AC5dt8wSP3BQAoeX58NoHyCU8P8zGkNXStjTSi6fzO6F0pBdcYbEg==
 
+cache-express@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/cache-express/-/cache-express-1.0.2.tgz#e9f405752170f0f26739e07f2e62399b81c43ee6"
+  integrity sha512-YL/UxDIkIGjgBXTwtodHEa6JQJ5uXUIsDl+vozOa+RsNh/1n8Sle8ITwJMNL4h0meFOrdnN9d9vFfrnYLhNALw==
+
 call-bind@^1.0.7:
   version "1.0.7"
   resolved "https://registry.yarnpkg.com/call-bind/-/call-bind-1.0.7.tgz#06016599c40c56498c18769d2730be242b6fa3b9"
