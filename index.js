@@ -2,7 +2,7 @@ import express from "express";
 import compression from "compression";
 import redis from "redis";
 import expressCache from "cache-express";
-
+import cache from "express-cache-headers";
 const app = express();
 
 const PORT = process.env.PORT || 4000;
@@ -64,6 +64,7 @@ app.use(compression(), express.json({ limit: "50mb" }));
 
 app.use(
   "/redis",
+  cache({ ttl: 60000, private: true }),
   expressCache({
     timeOut: 60000, // Customize cache timeout (in milliseconds)
     // dependsOn: () => [someDependency], // Specify cache dependencies, should be a function
