@@ -1,7 +1,7 @@
 import express from "express";
 import compression from "compression";
 import redis from "redis";
-import { getRedisPosts } from "./redis.js";
+// import { getRedisPosts } from "./redis.js";
 
 const app = express();
 
