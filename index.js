@@ -7,11 +7,11 @@ const app = express();
 
 const PORT = process.env.PORT || 4000;
 
-export const redisClient = redis.createClient({
+const redisClient = redis.createClient({
   url: "redis://default:mgpnoCLgHTDOpZflxfHqsabhihYriWjE@junction.proxy.rlwy.net:46125",
 });
 
-export async function getRedisPosts(limit = 10, offset = 0) {
+async function getRedisPosts(limit = 10, offset = 0) {
   try {
     let results = [];
     const max = limit + offset - 1;
@@ -49,14 +49,14 @@ export async function getRedisPosts(limit = 10, offset = 0) {
   }
 }
 
-(async () => {
-  redisClient.on("error", (err) => console.log("Redis Client Error", err));
-  redisClient.on("ready", () => {
-    console.log("Redis Client Connected!");
-  });
+// (async () => {
+//   redisClient.on("error", (err) => console.log("Redis Client Error", err));
+//   redisClient.on("ready", () => {
+//     console.log("Redis Client Connected!");
+//   });
 
-  await redisClient.connect();
-})();
+//   await redisClient.connect();
+// })();
 
 app.use(compression(), express.json({ limit: "50mb" }));
 
