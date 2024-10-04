@@ -11,9 +11,10 @@ const redisClient = redis.createClient({
   url: "redis://default:mgpnoCLgHTDOpZflxfHqsabhihYriWjE@junction.proxy.rlwy.net:46125",
 });
 
+await redisClient.connect();
+
 async function getRedisPosts(limit = 10, offset = 0) {
   try {
-    await redisClient.connect();
     let results = [];
     const max = limit + offset - 1;
     const posts = await redisClient.zRange("posts", offset, max, {
